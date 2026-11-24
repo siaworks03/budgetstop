@@ -50,6 +50,35 @@
     });
   }
 
+     /* ---------- Call button: copy the number on desktop ---------- */
+  var callCard = document.querySelector("[data-call]");
+  if (callCard && finePointer) {
+    var callLabel = callCard.querySelector(".link-label");
+    var callText = callLabel.textContent;
+    var resetTimer = null;
+
+    callCard.addEventListener("click", function (e) {
+      e.preventDefault(); // desktops can't place calls, so copy instead
+      var number = callCard.getAttribute("data-call");
+
+      function done() {
+        callLabel.textContent = "Number copied";
+        clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+          callLabel.textContent = callText;
+        }, 1800);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(number).then(done, function () {
+          window.location.href = callCard.href;
+        });
+      } else {
+        window.location.href = callCard.href;
+      }
+    });
+  }
+
   /* ---------- 3. Crest leans toward the pointer ---------- */
   var crest = document.querySelector(".crest");
   if (crest && finePointer && !reduceMotion) {
